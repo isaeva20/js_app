@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car app</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body class="container my-5">
+    <h1 class="text-center mb-4">Car app</h1>
+
+   <h2>Add Car</h2>
+   <form id="carForm" class="mb-4">
+     <div class="mb-3">
+       <label for="car" class="form-label">Brand:</label>
+       <input type="text" id="brand" class="form-control" required>
+     </div>
+     <div class="mb-3">
+       <label for="car" class="form-label">Model:</label>
+       <input type="text" id="model" class="form-control" required>
+     </div>
+     <div class="mb-3">
+       <label for="car" class="form-label">Year:</label>
+       <input type="number" id="year" class="form-control" required>
+     </div>
+     <button type="submit" class="btn btn-primary">
+       <i class="bi bi-plus-circle"></i> Add Car
+     </button>
+   </form>
+
+   <h2>Delete Car</h2>
+   <form id="deleteCarForm" class="mb-4">
+     <div class="mb-3">
+       <label for="deleteCar" class="form-label">Brand:</label>
+       <input type="text" id="deleteBrand" class="form-control" required>
+     </div>
+     <div class="mb-3">
+       <label for="deleteCar" class="form-label">Model:</label>
+       <input type="text" id="deleteModel" class="form-control" required>
+     </div>
+     <div class="mb-3">
+       <label for="deleteCar" class="form-label">Year:</label>
+       <input type="number" id="deleteYear" class="form-control" required>
+     </div>
+     <button type="submit" class="btn btn-danger">
+       <i class="bi bi-trash"></i> Delete Car
+     </button>
+   </form>
+
+   <h2>Update Car</h2>
+   <form id="updateCarForm">
+     <div class="mb-3">
+       <label for="updateCar" class="form-label">ID:</label>
+       <input type="text" id="updateId" class="form-control" required>
+     </div>
+     <div class="mb-3">
+       <label for="updateCar" class="form-label">New Model:</label>
+       <input type="text" id="updateModel" class="form-control" required>
+     </div>
+     <button type="submit" class="btn btn-success">
+       <i class="bi bi-check-circle"></i> Update Car
+     </button>
+   </form>
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+   <script>
+    const displayResponse = (data) => {
+      const responseElement = document.getElementById('response');
+      responseElement.textContent = JSON.stringify(data, null, 2);
+    };
+
+    document.getElementById('carForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const brand = document.getElementById('brand').value;
+      const model = document.getElementById('model').value;
+      const year = document.getElementById('year').value;
+      const response = await fetch('http://localhost:3001/cars', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ brand, model, year})
+      });
+      const data = await response.json(); 
+      displayResponse(data);
+     });
+
+    document.getElementById('deleteCarForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const brand = document.getElementById('deleteBrand').value;
+      const model = document.getElementById('deleteModel').value;
+      const year = document.getElementById('deleteYear').value;
+      const response = await fetch(`/cars/${brand}/${model}/${year}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      displayResponse(data);
+     });
+
+    document.getElementById('updateCarForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const id = document.getElementById('updateId').value;
+      const model = document.getElementById('updateModel').value;
+
+      const response = await fetch(`/cars/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model })
+      });
+      const data = await response.json();
+      displayResponse(data);
+    });
+   </script>
+</body>
+</html>
