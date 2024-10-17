@@ -12,22 +12,26 @@
 
    <h2>Add Car</h2>
    <form id="carForm" class="mb-4">
-     <div class="mb-3">
-       <label for="car" class="form-label">Brand:</label>
-       <input type="text" id="brand" class="form-control" required>
-     </div>
-     <div class="mb-3">
-       <label for="car" class="form-label">Model:</label>
-       <input type="text" id="model" class="form-control" required>
-     </div>
-     <div class="mb-3">
-       <label for="car" class="form-label">Year:</label>
-       <input type="number" id="year" class="form-control" required>
-     </div>
-     <button type="submit" class="btn btn-primary">
-       <i class="bi bi-plus-circle"></i> Add Car
-     </button>
-   </form>
+    <div class="mb-3">
+      <label for="car" class="form-label">User_id:</label>
+      <input type="text" id="userId" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="car" class="form-label">Brand:</label>
+      <input type="text" id="brand" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="car" class="form-label">Model:</label>
+      <input type="text" id="model" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label for="car" class="form-label">Year:</label>
+      <input type="number" id="year" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Add Car
+    </button>
+  </form>
 
    <h2>Delete Car</h2>
    <form id="deleteCarForm" class="mb-4">
@@ -72,13 +76,14 @@
 
     document.getElementById('carForm').addEventListener('submit', async (event) => {
       event.preventDefault();
+      const userId = document.getElementById('userId').value;
       const brand = document.getElementById('brand').value;
       const model = document.getElementById('model').value;
       const year = document.getElementById('year').value;
       const response = await fetch('http://localhost:3001/cars', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ brand, model, year})
+        body: JSON.stringify({ userId, brand, model, year })
       });
       const data = await response.json(); 
       displayResponse(data);

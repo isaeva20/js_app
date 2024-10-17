@@ -97,11 +97,36 @@ app.get('/cars/list', async(req, res) => {
 });
 
 
+
+app.get('/users', async(req, res) => {
+    const { filter } = req.query;
+    const query = filter === 'idGT'
+    ? 'SELECT * FROM users WHERE id > 10'
+    : filter === 'idLT'
+    ? 'SELECT * FROM users WHERE id <= 10'
+    : 'SELECT * FROM users';
+    const result = await pool.query(query);
+    res.json(result.rows);
+});
+
+
+app.get('/cars/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+      const result = await pool.query('SELECT * FROM cars WHERE userId = $1', [userId]);
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Ошибка запроса: ', error);
+      res.status(500).send('Ошибка сервера');
+    }
+});
+
+
 app.post('/cars', async (req, res) => {
-    const { brand, model, year } = req.body;
-    if (brand && model && year){
+    const { userId, brand, model, year } = req.body;
+    if (userId && brand && model && year){
         const result = await pool.query(
-            'INSERT INTO cars (brand, model, year) VALUES ($1, $2, $3) RETURNING *', [brand, model, year]);
+            'INSERT INTO cars (userId, brand, model, year) VALUES ($1, $2, $3, $4) RETURNING *', [userId, brand, model, year]);
         res.json({ message: 'car to be created' });
     } else {
         res.status(400).json({ error: 'An error occurred while creating the car' });
@@ -151,5 +176,5 @@ app.get('/', (req, res) => {
     res.sendFile('/home/darya/js_base/index.html');
 });
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}/register`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
